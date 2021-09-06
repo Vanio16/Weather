@@ -10,7 +10,7 @@ import UIKit
 import Framezilla
 
 protocol WeatherViewOutput {
-func viewDidLoad()
+    func viewDidLoad()
     func showCitiesScreen()
 }
 
@@ -26,20 +26,20 @@ final class WeatherViewController: UIViewController {
         static let myLocateButtonInsetRight: CGFloat = 20
         static let myLocateButtonSize: CGSize = . init(width: 154, height: 18)
     }
-    
+
     private let output: WeatherViewOutput
 
-// MARK: - Subviews
+    // MARK: - Subviews
 
     private let cityLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.text = "Омск"
         label.font = UIFont(name: "Lato-Light", size: 45)
         label.textColor = .white
         return label
     }()
     private let changeCityButton: UIButton = {
-       let button = UIButton()
+        let button = UIButton()
         button.setTitle("Сменить город", for: .normal)
         button.titleLabel?.font = UIFont(name: "Lato-Light", size: 18)
         button.setTitleColor(.darkGray, for: .normal)
@@ -47,17 +47,19 @@ final class WeatherViewController: UIViewController {
         return button
     }()
     private let myLocateButton: UIButton = {
-       let button = UIButton()
+        let button = UIButton()
         button.setTitle("Мое местоположение", for: .normal)
         button.titleLabel?.font = UIFont(name: "Lato-Light", size: 18)
         button.setTitleColor(.darkGray, for: .normal)
-//        button.setImage(UIImage(named: "Arrow"), for: .normal)
-//        button.imageView?.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
-//        button.imageEdgeInsets.left = 0
         return button
     }()
+    private let myLocateImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "Arrow")
+        return imageView
+    }()
     private let temperatureLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.text = "14º"
         label.font = UIFont(name: "Lato-Light", size: 90)
         label.textColor = .white
@@ -70,7 +72,7 @@ final class WeatherViewController: UIViewController {
         return imageView
     }()
     private let weaterLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.text = "Дождь"
         label.font = UIFont(name: "Lato-Light", size: 30)
         label.textColor = .white
@@ -133,19 +135,19 @@ final class WeatherViewController: UIViewController {
         label.textColor = .white
         return label
     }()
-     let activityIndicatorView: UIView = {
+    let activityIndicatorView: UIView = {
         let view = UIView()
         view.backgroundColor = .black.withAlphaComponent(0.3)
         view.isHidden = true
         return view
     }()
-     let activityIndicator: UIActivityIndicatorView = {
-       let indicator = UIActivityIndicatorView()
+    let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
         indicator.isHidden = true
         indicator.stopAnimating()
         return indicator
     }()
-    
+
     // MARK: - Lifecycle
 
     init(output: WeatherViewOutput) {
@@ -160,7 +162,22 @@ final class WeatherViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicatorView.add(activityIndicator)
-        view.add(cityLabel, changeCityButton, myLocateButton, weatherImage, temperatureLabel, humidityValueLabel, humidityLabel, windValueLabel, windLabel, pressureLabel, pressureValueLabel, feelsLikeLabel, feelsLikeValueLabel, weaterLabel, activityIndicatorView)
+        view.add(cityLabel,
+                 changeCityButton,
+                 myLocateButton,
+                 myLocateImageView,
+                 weatherImage,
+                 temperatureLabel,
+                 humidityValueLabel,
+                 humidityLabel,
+                 windValueLabel,
+                 windLabel,
+                 pressureLabel,
+                 pressureValueLabel,
+                 feelsLikeLabel,
+                 feelsLikeValueLabel,
+                 weaterLabel,
+                 activityIndicatorView)
         output.viewDidLoad()
         view.backgroundColor = UIColor(red: 114, green: 144, blue: 185)
     }
@@ -184,6 +201,14 @@ final class WeatherViewController: UIViewController {
             maker.centerY(to: changeCityButton.nui_centerY)
                 .right(to: view.nui_safeArea.right, inset: Constants.myLocateButtonInsetRight)
                 .sizeToFit()
+        }
+        myLocateImageView.configureFrame { maker in
+            guard let size = myLocateButton.titleLabel?.frame.height else {
+                return
+            }
+            maker.centerY(to: myLocateButton.nui_centerY)
+                .right(to: myLocateButton.nui_left, inset: 7)
+                .size(width: size / 1.5, height: size)
         }
         if UIDevice.current.orientation.isLandscape {
             temperatureLabel.configureFrame { maker in
@@ -247,7 +272,8 @@ final class WeatherViewController: UIViewController {
                     .right()
                     .sizeToFit()
             }
-        } else {
+        }
+        else {
             weatherImage.configureFrame { maker in
                 maker.centerY()
                     .size(width: 90, height: 90)
@@ -310,7 +336,7 @@ final class WeatherViewController: UIViewController {
                     .sizeToFit()
             }
         }
-       
+
         activityIndicatorView.configureFrame { maker in
             maker.top()
                 .bottom()
@@ -318,7 +344,7 @@ final class WeatherViewController: UIViewController {
                 .left()
         }
         activityIndicator.configureFrame { maker in
-            maker.centerX(to:activityIndicatorView.nui_centerX)
+            maker.centerX(to: activityIndicatorView.nui_centerX)
                 .centerY(to: activityIndicatorView.nui_centerY)
                 .size(width: 50, height: 50)
         }
@@ -343,7 +369,7 @@ final class WeatherViewController: UIViewController {
         cityLabel.text = city
         feelsLikeValueLabel.text = "\(Int(tempFeels))º"
     }
-    
+
     @objc private func tapChangeCityButton() {
         output.showCitiesScreen()
     }

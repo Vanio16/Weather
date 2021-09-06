@@ -9,13 +9,13 @@ import Foundation
 
 class NetworkService {
     private let token = "16cb8613652bb722f03ed6c75de7dc84"
-    
-    func getWeather(city: String,completion: @escaping (Result<WeatherModel, Error>) -> Void) {
+
+    func getWeather(city: String, completion: @escaping (Result<WeatherModel, Error>) -> Void) {
         let urlString = "http://api.openweathermap.org/data/2.5/weather?id=\(city)&units=metric&lang=ru&appid=\(token)"
         guard let url = URL(string: urlString) else {
             return
         }
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
+        URLSession.shared.dataTask(with: url) { (data, _, error) in
             DispatchQueue.main.async {
                 if let error = error {
                     completion(.failure(error))
@@ -27,7 +27,8 @@ class NetworkService {
                 do {
                     let weather = try JSONDecoder().decode(WeatherModel.self, from: data)
                     completion(.success(weather))
-                } catch let jsonError{
+                }
+                catch let jsonError {
                     completion(.failure(jsonError))
                 }
             }

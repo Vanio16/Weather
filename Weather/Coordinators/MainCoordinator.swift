@@ -14,8 +14,6 @@ final class MainCoordinator: WeatherModuleOutput, CitiesModuleOutput {
     var navigationController: UINavigationController
     let weatherModule = WeatherModule()
     let citiesModule = CitiesModule()
-    
-
 
     init(window: UIWindow) {
         self.window = window

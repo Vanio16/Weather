@@ -21,8 +21,6 @@ extension CitiesPresenter: CitiesViewOutput {
     func getCityId(id: String) {
         output?.citiesModuleSendsCityId(id: id)
     }
-    
-
 }
 
 extension CitiesPresenter: CitiesModuleInput {

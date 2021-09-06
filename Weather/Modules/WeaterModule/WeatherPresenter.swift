@@ -44,13 +44,13 @@ final class WeatherPresenter {
         view?.activityIndicator.isHidden = false
         view?.activityIndicatorView.isHidden = false
     }
-    
+
     private func hideLoadingView() {
         view?.activityIndicator.stopAnimating()
         view?.activityIndicator.isHidden = true
         view?.activityIndicatorView.isHidden = true
     }
-    
+
     private func fetchWeather(cityId: String) {
 showLoadingView()
         networkService.getWeather(city: cityId) { result in
@@ -64,9 +64,8 @@ showLoadingView()
                 }
                 let url = URL(string: "http://openweathermap.org/img/wn/\(icon)@2x.png")
                 self.view?.weatherImage.kf.setImage(with: url)
-            case .failure(let error):
+            case .failure(_):
                 self.hideLoadingView()
-                break
             }
         }
     }
@@ -76,7 +75,7 @@ extension WeatherPresenter: WeatherViewOutput {
     func showCitiesScreen() {
         output?.weatherModuleCitiesModuleShow(self)
     }
-    
+
     func viewDidLoad() {
 fetchWeather(cityId: "1496153")
     }
@@ -89,6 +88,4 @@ extension WeatherPresenter: WeatherModuleInput {
         }
         fetchWeather(cityId: id)
     }
-    
-
 }

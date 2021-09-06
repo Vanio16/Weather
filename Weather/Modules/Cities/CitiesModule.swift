@@ -8,7 +8,7 @@
 import Foundation
 
 protocol CitiesModuleInput: AnyObject {
-    var state: CitiesState {get}
+    var state: CitiesState { get }
 }
 
 protocol CitiesModuleOutput: AnyObject {

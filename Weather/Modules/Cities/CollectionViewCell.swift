@@ -15,7 +15,7 @@ class CollectionViewCell: UICollectionViewCell {
     }
 
     private let cityLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.textColor = .black
         return label
     }()
