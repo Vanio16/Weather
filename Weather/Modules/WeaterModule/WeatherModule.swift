@@ -9,10 +9,11 @@ import Foundation
 
 protocol WeatherModuleInput: AnyObject {
     var state: WeatherState {get}
+    func updateWeather()
 }
 
 protocol WeatherModuleOutput: AnyObject {
-
+    func weatherModuleCitiesModuleShow(_ moduleInput: WeatherModuleInput)
 }
 
 final class WeatherModule {

@@ -9,5 +9,5 @@ import Foundation
 
 final class WeatherState {
     var weather: WeatherModel?
-    
+    var cityId: String?
 }

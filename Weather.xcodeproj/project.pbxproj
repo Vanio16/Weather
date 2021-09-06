@@ -23,6 +23,13 @@
 		974487F826E1E8E7000E1167 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 974487F726E1E8E7000E1167 /* NetworkService.swift */; };
 		974487FB26E1EBEE000E1167 /* WeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 974487FA26E1EBEE000E1167 /* WeatherModel.swift */; };
 		9759EF3B26E5E0C900CCE888 /* Kingfisher.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9759EF3A26E5E0C900CCE888 /* Kingfisher.xcframework */; };
+		9759EF4026E5E70100CCE888 /* CitiesModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9759EF3F26E5E70100CCE888 /* CitiesModule.swift */; };
+		9759EF4226E5E75C00CCE888 /* CitiesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9759EF4126E5E75C00CCE888 /* CitiesPresenter.swift */; };
+		9759EF4426E5E76B00CCE888 /* CitiesState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9759EF4326E5E76B00CCE888 /* CitiesState.swift */; };
+		9759EF4626E5E77A00CCE888 /* CitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9759EF4526E5E77A00CCE888 /* CitiesViewController.swift */; };
+		9759EF4826E5EF0B00CCE888 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9759EF4726E5EF0B00CCE888 /* City.swift */; };
+		9759EF4A26E5F42F00CCE888 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9759EF4926E5F42F00CCE888 /* CollectionViewCell.swift */; };
+		9759EF4C26E6141600CCE888 /* String+Capitalized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9759EF4B26E6141600CCE888 /* String+Capitalized.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +51,13 @@
 		974487F726E1E8E7000E1167 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		974487FA26E1EBEE000E1167 /* WeatherModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherModel.swift; sourceTree = "<group>"; };
 		9759EF3A26E5E0C900CCE888 /* Kingfisher.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Kingfisher.xcframework; path = Carthage/Build/Kingfisher.xcframework; sourceTree = "<group>"; };
+		9759EF3F26E5E70100CCE888 /* CitiesModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesModule.swift; sourceTree = "<group>"; };
+		9759EF4126E5E75C00CCE888 /* CitiesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesPresenter.swift; sourceTree = "<group>"; };
+		9759EF4326E5E76B00CCE888 /* CitiesState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesState.swift; sourceTree = "<group>"; };
+		9759EF4526E5E77A00CCE888 /* CitiesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesViewController.swift; sourceTree = "<group>"; };
+		9759EF4726E5EF0B00CCE888 /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
+		9759EF4926E5F42F00CCE888 /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		9759EF4B26E6141600CCE888 /* String+Capitalized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Capitalized.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +128,7 @@
 		972FC33226E0DDA7005E01B2 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				9759EF3E26E5E6D600CCE888 /* Cities */,
 				972FC33326E0DDB6005E01B2 /* WeaterModule */,
 			);
 			path = Modules;
@@ -135,6 +150,7 @@
 			children = (
 				972FC33F26E0DE92005E01B2 /* UIView+Sugar.swift */,
 				972FC34126E0E786005E01B2 /* UIColor+Sugar.swift */,
+				9759EF4B26E6141600CCE888 /* String+Capitalized.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -143,8 +159,21 @@
 			isa = PBXGroup;
 			children = (
 				974487FA26E1EBEE000E1167 /* WeatherModel.swift */,
+				9759EF4726E5EF0B00CCE888 /* City.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		9759EF3E26E5E6D600CCE888 /* Cities */ = {
+			isa = PBXGroup;
+			children = (
+				9759EF4926E5F42F00CCE888 /* CollectionViewCell.swift */,
+				9759EF3F26E5E70100CCE888 /* CitiesModule.swift */,
+				9759EF4126E5E75C00CCE888 /* CitiesPresenter.swift */,
+				9759EF4326E5E76B00CCE888 /* CitiesState.swift */,
+				9759EF4526E5E77A00CCE888 /* CitiesViewController.swift */,
+			);
+			path = Cities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -280,14 +309,21 @@
 			files = (
 				974487F826E1E8E7000E1167 /* NetworkService.swift in Sources */,
 				972FC33726E0DE0C005E01B2 /* WeatherPresenter.swift in Sources */,
+				9759EF4A26E5F42F00CCE888 /* CollectionViewCell.swift in Sources */,
 				972FC33D26E0DE60005E01B2 /* MainCoordinator.swift in Sources */,
 				974487FB26E1EBEE000E1167 /* WeatherModel.swift in Sources */,
+				9759EF4026E5E70100CCE888 /* CitiesModule.swift in Sources */,
 				972FC33526E0DDE1005E01B2 /* WeatherModule.swift in Sources */,
+				9759EF4626E5E77A00CCE888 /* CitiesViewController.swift in Sources */,
+				9759EF4426E5E76B00CCE888 /* CitiesState.swift in Sources */,
 				972FC31726E0CFD6005E01B2 /* AppDelegate.swift in Sources */,
+				9759EF4226E5E75C00CCE888 /* CitiesPresenter.swift in Sources */,
 				972FC34026E0DE92005E01B2 /* UIView+Sugar.swift in Sources */,
 				972FC33B26E0DE39005E01B2 /* WeatherViewController.swift in Sources */,
+				9759EF4C26E6141600CCE888 /* String+Capitalized.swift in Sources */,
 				972FC33926E0DE1E005E01B2 /* WeatherState.swift in Sources */,
 				972FC34226E0E786005E01B2 /* UIColor+Sugar.swift in Sources */,
+				9759EF4826E5EF0B00CCE888 /* City.swift in Sources */,
 				972FC31926E0CFD6005E01B2 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

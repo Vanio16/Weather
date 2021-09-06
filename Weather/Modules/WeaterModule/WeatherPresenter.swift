@@ -39,13 +39,24 @@ final class WeatherPresenter {
             return "южный"
         }
     }
-}
-
-extension WeatherPresenter: WeatherViewOutput {
-    func viewDidLoad() {
-        networkService.getWeather { result in
+    private func showLoadingView() {
+        view?.activityIndicator.startAnimating()
+        view?.activityIndicator.isHidden = false
+        view?.activityIndicatorView.isHidden = false
+    }
+    
+    private func hideLoadingView() {
+        view?.activityIndicator.stopAnimating()
+        view?.activityIndicator.isHidden = true
+        view?.activityIndicatorView.isHidden = true
+    }
+    
+    private func fetchWeather(cityId: String) {
+showLoadingView()
+        networkService.getWeather(city: cityId) { result in
             switch result {
             case .success(let response):
+                self.hideLoadingView()
                 self.view?.update(weather: response)
                 guard let temp = response.weather.first,
                 let icon = temp?.icon else {
@@ -54,12 +65,30 @@ extension WeatherPresenter: WeatherViewOutput {
                 let url = URL(string: "http://openweathermap.org/img/wn/\(icon)@2x.png")
                 self.view?.weatherImage.kf.setImage(with: url)
             case .failure(let error):
+                self.hideLoadingView()
                 break
             }
         }
     }
 }
 
+extension WeatherPresenter: WeatherViewOutput {
+    func showCitiesScreen() {
+        output?.weatherModuleCitiesModuleShow(self)
+    }
+    
+    func viewDidLoad() {
+fetchWeather(cityId: "1496153")
+    }
+}
+
 extension WeatherPresenter: WeatherModuleInput {
+    func updateWeather() {
+        guard let id = state.cityId else {
+            return
+        }
+        fetchWeather(cityId: id)
+    }
+    
 
 }

@@ -8,11 +8,12 @@
 import Foundation
 import UIKit
 
-final class MainCoordinator: WeatherModuleOutput {
+final class MainCoordinator: WeatherModuleOutput, CitiesModuleOutput {
 
     let window: UIWindow
     var navigationController: UINavigationController
     let weatherModule = WeatherModule()
+    let citiesModule = CitiesModule()
     
 
 
@@ -24,7 +25,15 @@ final class MainCoordinator: WeatherModuleOutput {
 
     func start() {
         weatherModule.output = self
+        citiesModule.output = self
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
+    }
+    func weatherModuleCitiesModuleShow(_ moduleInput: WeatherModuleInput) {
+        navigationController.present(citiesModule.viewController, animated: true)
+    }
+    func citiesModuleSendsCityId(id: String) {
+        weatherModule.input.state.cityId = id
+        weatherModule.input.updateWeather()
     }
 }

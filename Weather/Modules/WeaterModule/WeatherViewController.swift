@@ -11,6 +11,7 @@ import Framezilla
 
 protocol WeatherViewOutput {
 func viewDidLoad()
+    func showCitiesScreen()
 }
 
 final class WeatherViewController: UIViewController {
@@ -25,11 +26,11 @@ final class WeatherViewController: UIViewController {
         static let myLocateButtonInsetRight: CGFloat = 20
         static let myLocateButtonSize: CGSize = . init(width: 154, height: 18)
     }
-    private let backgroundView: UIView = {
-       let view = UIView()
-        view.backgroundColor = UIColor(red: 114, green: 144, blue: 185)
-        return view
-    }()
+    
+    private let output: WeatherViewOutput
+
+// MARK: - Subviews
+
     private let cityLabel: UILabel = {
        let label = UILabel()
         label.text = "Омск"
@@ -42,6 +43,7 @@ final class WeatherViewController: UIViewController {
         button.setTitle("Сменить город", for: .normal)
         button.titleLabel?.font = UIFont(name: "Lato-Light", size: 18)
         button.setTitleColor(.darkGray, for: .normal)
+        button.addTarget(self, action: #selector(tapChangeCityButton), for: .touchUpInside)
         return button
     }()
     private let myLocateButton: UIButton = {
@@ -72,6 +74,7 @@ final class WeatherViewController: UIViewController {
         label.text = "Дождь"
         label.font = UIFont(name: "Lato-Light", size: 30)
         label.textColor = .white
+        label.textAlignment = .center
         return label
     }()
     private let humidityLabel: UILabel = {
@@ -88,14 +91,14 @@ final class WeatherViewController: UIViewController {
         label.textColor = .white
         return label
     }()
-    private let chanceOfRainLabel: UILabel  = {
+    private let feelsLikeLabel: UILabel  = {
         let label = UILabel()
-        label.text = "Вероятность дождя"
+        label.text = "Ощущается как"
         label.font = UIFont(name: "Lato-Light", size: 20)
         label.textColor = .lightGray
         return label
     }()
-    private let chanceOfRainValueLabel: UILabel  = {
+    private let feelsLikeValueLabel: UILabel  = {
         let label = UILabel()
         label.text = "100%"
         label.font = UIFont(name: "Lato-Light", size: 24)
@@ -130,11 +133,19 @@ final class WeatherViewController: UIViewController {
         label.textColor = .white
         return label
     }()
-
-    private let output: WeatherViewOutput
-
-// MARK: - Subviews
-
+     let activityIndicatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black.withAlphaComponent(0.3)
+        view.isHidden = true
+        return view
+    }()
+     let activityIndicator: UIActivityIndicatorView = {
+       let indicator = UIActivityIndicatorView()
+        indicator.isHidden = true
+        indicator.stopAnimating()
+        return indicator
+    }()
+    
     // MARK: - Lifecycle
 
     init(output: WeatherViewOutput) {
@@ -148,22 +159,20 @@ final class WeatherViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.add(backgroundView, cityLabel, changeCityButton, myLocateButton, weatherImage, temperatureLabel, humidityValueLabel, humidityLabel, windValueLabel, windLabel, pressureLabel, pressureValueLabel, chanceOfRainLabel, chanceOfRainValueLabel, weaterLabel)
+        activityIndicatorView.add(activityIndicator)
+        view.add(cityLabel, changeCityButton, myLocateButton, weatherImage, temperatureLabel, humidityValueLabel, humidityLabel, windValueLabel, windLabel, pressureLabel, pressureValueLabel, feelsLikeLabel, feelsLikeValueLabel, weaterLabel, activityIndicatorView)
         output.viewDidLoad()
+        view.backgroundColor = UIColor(red: 114, green: 144, blue: 185)
     }
 
     // MARK: - Layout
 
+    // swiftlint:disable:next function_body_length
     override func viewDidLayoutSubviews() {
-        backgroundView.configureFrame { maker in
-            maker.top()
-                .bottom()
-                .left()
-                .right()
-        }
         cityLabel.configureFrame { maker in
             maker.top(to: view.nui_safeArea.top, inset: Constants.cityLabelInsetTop)
                 .left(to: view.nui_safeArea.left, inset: Constants.cityLabelInsetLeft)
+                .right()
                 .sizeToFit()
         }
         changeCityButton.configureFrame { maker in
@@ -176,63 +185,142 @@ final class WeatherViewController: UIViewController {
                 .right(to: view.nui_safeArea.right, inset: Constants.myLocateButtonInsetRight)
                 .sizeToFit()
         }
-        weatherImage.configureFrame { maker in
-            maker.centerY()
-                .size(width: 90, height: 90)
-                .left(inset: 70)
+        if UIDevice.current.orientation.isLandscape {
+            temperatureLabel.configureFrame { maker in
+                maker.centerY()
+                    .right(to: view.nui_right, inset: 20)
+                    .width(200)
+                    .sizeToFit()
+            }
+            weatherImage.configureFrame { maker in
+                maker.centerY()
+                    .size(width: 90, height: 90)
+                    .right(to: temperatureLabel.nui_left, inset: 20)
+            }
+
+            weaterLabel.configureFrame { maker in
+                maker.top(to: weatherImage.nui_bottom, inset: 20)
+                    .left(to: weatherImage.nui_left, inset: -30)
+                    .right()
+                    .sizeToFit()
+            }
+            humidityValueLabel.configureFrame { maker in
+                maker.bottom(inset: 40)
+                    .left(to: view.nui_safeArea.left, inset: 21)
+                    .right(to: weatherImage.nui_right)
+                    .sizeToFit()
+            }
+            humidityLabel.configureFrame { maker in
+                maker.bottom(to: humidityValueLabel.nui_top, inset: 2)
+                    .left(to: view.nui_safeArea.left, inset: 21)
+                    .sizeToFit()
+            }
+            windValueLabel.configureFrame { maker in
+                maker.bottom(to: humidityLabel.nui_top, inset: 40)
+                    .left(to: view.nui_safeArea.left, inset: 21)
+                    .sizeToFit()
+            }
+            windLabel.configureFrame { maker in
+                maker.bottom(to: windValueLabel.nui_top, inset: 2)
+                    .left(to: view.nui_safeArea.left, inset: 21)
+                    .sizeToFit()
+            }
+            pressureLabel.configureFrame { maker in
+                maker.left(to: windLabel.nui_right, inset: 120)
+                    .centerY(to: windLabel.nui_centerY)
+                    .sizeToFit()
+            }
+            pressureValueLabel.configureFrame { maker in
+                maker.top(to: pressureLabel.nui_bottom, inset: 2)
+                maker.left(to: pressureLabel.nui_left)
+                    .right()
+                    .sizeToFit()
+            }
+            feelsLikeLabel.configureFrame { maker in
+                maker.top(to: pressureValueLabel.nui_bottom, inset: 40)
+                maker.left(to: pressureLabel.nui_left)
+                    .sizeToFit()
+            }
+            feelsLikeValueLabel.configureFrame { maker in
+                maker.top(to: feelsLikeLabel.nui_bottom, inset: 2)
+                maker.left(to: pressureLabel.nui_left)
+                    .right()
+                    .sizeToFit()
+            }
+        } else {
+            weatherImage.configureFrame { maker in
+                maker.centerY()
+                    .size(width: 90, height: 90)
+                    .left(inset: 70)
+            }
+            temperatureLabel.configureFrame { maker in
+                maker.centerY()
+                    .left(to: weatherImage.nui_right, inset: 20)
+                    .right()
+                    .sizeToFit()
+            }
+            weaterLabel.configureFrame { maker in
+                maker.centerX()
+                    .top(to: weatherImage.nui_bottom, inset: 20)
+                    .left()
+                    .right()
+                    .sizeToFit()
+            }
+            humidityValueLabel.configureFrame { maker in
+                maker.bottom(inset: 40)
+                    .left(inset: 21)
+                    .right(to: weatherImage.nui_right)
+                    .sizeToFit()
+            }
+            humidityLabel.configureFrame { maker in
+                maker.bottom(to: humidityValueLabel.nui_top, inset: 2)
+                    .left(inset: 21)
+                    .sizeToFit()
+            }
+            windValueLabel.configureFrame { maker in
+                maker.bottom(to: humidityLabel.nui_top, inset: 40)
+                    .left(inset: 21)
+                    .sizeToFit()
+            }
+            windLabel.configureFrame { maker in
+                maker.bottom(to: windValueLabel.nui_top, inset: 2)
+                    .left(inset: 21)
+                    .sizeToFit()
+            }
+            pressureLabel.configureFrame { maker in
+                maker.left(to: windLabel.nui_right, inset: 120)
+                    .centerY(to: windLabel.nui_centerY)
+                    .sizeToFit()
+            }
+            pressureValueLabel.configureFrame { maker in
+                maker.top(to: pressureLabel.nui_bottom, inset: 2)
+                maker.left(to: pressureLabel.nui_left)
+                    .right()
+                    .sizeToFit()
+            }
+            feelsLikeLabel.configureFrame { maker in
+                maker.top(to: pressureValueLabel.nui_bottom, inset: 40)
+                maker.left(to: pressureLabel.nui_left)
+                    .sizeToFit()
+            }
+            feelsLikeValueLabel.configureFrame { maker in
+                maker.top(to: feelsLikeLabel.nui_bottom, inset: 2)
+                maker.left(to: pressureLabel.nui_left)
+                    .right()
+                    .sizeToFit()
+            }
         }
-        temperatureLabel.configureFrame { maker in
-            maker.centerY()
-                .left(to: weatherImage.nui_right, inset: 20)
+       
+        activityIndicatorView.configureFrame { maker in
+            maker.top()
+                .bottom()
                 .right()
-                .sizeToFit()
+                .left()
         }
-        weaterLabel.configureFrame { maker in
-            maker.centerX()
-                .top(to: weatherImage.nui_bottom, inset: 20)
-                .sizeToFit()
-        }
-        humidityValueLabel.configureFrame { maker in
-            maker.bottom(inset: 40)
-                .left(inset: 21)
-                .right(to: weaterLabel.nui_left)
-                .sizeToFit()
-        }
-        humidityLabel.configureFrame { maker in
-            maker.bottom(to: humidityValueLabel.nui_top, inset: 2)
-                .left(inset: 21)
-                .sizeToFit()
-        }
-        windValueLabel.configureFrame { maker in
-            maker.bottom(to: humidityLabel.nui_top, inset: 40)
-                .left(inset: 21)
-                .sizeToFit()
-        }
-        windLabel.configureFrame { maker in
-            maker.bottom(to: windValueLabel.nui_top, inset: 2)
-                .left(inset: 21)
-                .sizeToFit()
-        }
-        pressureLabel.configureFrame { maker in
-            maker.left(to: windLabel.nui_right, inset: 120)
-                .centerY(to: windLabel.nui_centerY)
-                .sizeToFit()
-        }
-        pressureValueLabel.configureFrame { maker in
-            maker.top(to: pressureLabel.nui_bottom, inset: 2)
-            maker.left(to: pressureLabel.nui_left)
-                .right()
-                .sizeToFit()
-        }
-        chanceOfRainLabel.configureFrame { maker in
-            maker.top(to: pressureValueLabel.nui_bottom, inset: 40)
-            maker.left(to: pressureLabel.nui_left)
-                .sizeToFit()
-        }
-        chanceOfRainValueLabel.configureFrame { maker in
-            maker.top(to: chanceOfRainLabel.nui_bottom, inset: 2)
-            maker.left(to: pressureLabel.nui_left)
-                .sizeToFit()
+        activityIndicator.configureFrame { maker in
+            maker.centerX(to:activityIndicatorView.nui_centerX)
+                .centerY(to: activityIndicatorView.nui_centerY)
+                .size(width: 50, height: 50)
         }
 
     }
@@ -242,13 +330,21 @@ final class WeatherViewController: UIViewController {
               let pressure = weather.main?.pressure,
               let currentWeather = weather.weather.first,
               let description = currentWeather?.description,
-              let speed = weather.wind?.speed else {
+              let speed = weather.wind?.speed,
+              let city = weather.name,
+              let tempFeels = weather.main?.feelsLike else {
             return
         }
         temperatureLabel.text = "\(Int(temp))º"
         humidityValueLabel.text = "\(Int(humidity)) %"
         pressureValueLabel.text = "\(Int(pressure / 1.333)) мм.рт.ст"
-        weaterLabel.text = description
+        weaterLabel.text = description.capitalizingFirstLetter()
         windValueLabel.text = "\(Int(speed)) м/c"
+        cityLabel.text = city
+        feelsLikeValueLabel.text = "\(Int(tempFeels))º"
+    }
+    
+    @objc private func tapChangeCityButton() {
+        output.showCitiesScreen()
     }
 }
