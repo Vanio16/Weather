@@ -30,6 +30,7 @@
 		9759EF4826E5EF0B00CCE888 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9759EF4726E5EF0B00CCE888 /* City.swift */; };
 		9759EF4A26E5F42F00CCE888 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9759EF4926E5F42F00CCE888 /* CollectionViewCell.swift */; };
 		9759EF4C26E6141600CCE888 /* String+Capitalized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9759EF4B26E6141600CCE888 /* String+Capitalized.swift */; };
+		9759EF4E26E63CB100CCE888 /* GeoNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9759EF4D26E63CB100CCE888 /* GeoNetworkService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		9759EF4726E5EF0B00CCE888 /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		9759EF4926E5F42F00CCE888 /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		9759EF4B26E6141600CCE888 /* String+Capitalized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Capitalized.swift"; sourceTree = "<group>"; };
+		9759EF4D26E63CB100CCE888 /* GeoNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoNetworkService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				972FC32126E0CFD7005E01B2 /* LaunchScreen.storyboard */,
 				972FC32426E0CFD7005E01B2 /* Info.plist */,
 				974487F726E1E8E7000E1167 /* NetworkService.swift */,
+				9759EF4D26E63CB100CCE888 /* GeoNetworkService.swift */,
 			);
 			path = Weather;
 			sourceTree = "<group>";
@@ -325,6 +328,7 @@
 				972FC34226E0E786005E01B2 /* UIColor+Sugar.swift in Sources */,
 				9759EF4826E5EF0B00CCE888 /* City.swift in Sources */,
 				972FC31926E0CFD6005E01B2 /* SceneDelegate.swift in Sources */,
+				9759EF4E26E63CB100CCE888 /* GeoNetworkService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Framezilla
+import CoreLocation
 
 protocol WeatherViewOutput {
     func viewDidLoad()
@@ -26,7 +27,10 @@ final class WeatherViewController: UIViewController {
         static let myLocateButtonInsetRight: CGFloat = 20
         static let myLocateButtonSize: CGSize = . init(width: 154, height: 18)
     }
-
+    let locationManager = CLLocationManager()
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
+    let geoNetworkService = GeoNetworkService()
     private let output: WeatherViewOutput
 
     // MARK: - Subviews
@@ -51,6 +55,7 @@ final class WeatherViewController: UIViewController {
         button.setTitle("Мое местоположение", for: .normal)
         button.titleLabel?.font = UIFont(name: "Lato-Light", size: 18)
         button.setTitleColor(.darkGray, for: .normal)
+        button.addTarget(self, action: #selector(tapMyLocationButton), for: .touchUpInside)
         return button
     }()
     private let myLocateImageView: UIImageView = {
@@ -180,6 +185,12 @@ final class WeatherViewController: UIViewController {
                  activityIndicatorView)
         output.viewDidLoad()
         view.backgroundColor = UIColor(red: 114, green: 144, blue: 185)
+        locationManager.requestAlwaysAuthorization()
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.startUpdatingLocation()
+        }
     }
 
     // MARK: - Layout
@@ -372,5 +383,39 @@ final class WeatherViewController: UIViewController {
 
     @objc private func tapChangeCityButton() {
         output.showCitiesScreen()
+    }
+    @objc private func tapMyLocationButton() {
+        activityIndicator.startAnimating()
+        activityIndicator.isHidden = false
+        activityIndicatorView.isHidden = false
+        geoNetworkService.getWeather(lat: latitude, lon: longitude) { result in
+            switch result {
+            case .success(let response):
+                self.activityIndicator.stopAnimating()
+                self.activityIndicator.isHidden = true
+                self.activityIndicatorView.isHidden = true
+                self.update(weather: response)
+                guard let temp = response.weather.first,
+                      let icon = temp?.icon else {
+                    return
+                }
+                let url = URL(string: "http://openweathermap.org/img/wn/\(icon)@2x.png")
+                self.weatherImage.kf.setImage(with: url)
+            case .failure(_):
+                self.activityIndicator.stopAnimating()
+                self.activityIndicator.isHidden = true
+                self.activityIndicatorView.isHidden = true
+            }
+        }
+    }
+}
+
+extension WeatherViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            latitude = location.coordinate.latitude
+            longitude = location.coordinate.longitude
+            print("\(latitude) \(longitude)")
+        }
     }
 }

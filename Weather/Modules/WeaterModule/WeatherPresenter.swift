@@ -9,7 +9,7 @@ import Foundation
 import Kingfisher
 
 final class WeatherPresenter {
-
+    
     weak var view: WeatherViewController?
     weak var output: WeatherModuleOutput?
     let networkService = NetworkService()
@@ -28,7 +28,7 @@ final class WeatherPresenter {
         case 101.26...168.75:
             return "юго-восточный"
         case 168.76...191.25:
-        return "южный"
+            return "южный"
         case 191.26...258.75:
             return "юго-западный"
         case 258.76...303.75:
@@ -44,22 +44,22 @@ final class WeatherPresenter {
         view?.activityIndicator.isHidden = false
         view?.activityIndicatorView.isHidden = false
     }
-
+    
     private func hideLoadingView() {
         view?.activityIndicator.stopAnimating()
         view?.activityIndicator.isHidden = true
         view?.activityIndicatorView.isHidden = true
     }
-
+    
     private func fetchWeather(cityId: String) {
-showLoadingView()
+        showLoadingView()
         networkService.getWeather(city: cityId) { result in
             switch result {
             case .success(let response):
                 self.hideLoadingView()
                 self.view?.update(weather: response)
                 guard let temp = response.weather.first,
-                let icon = temp?.icon else {
+                      let icon = temp?.icon else {
                     return
                 }
                 let url = URL(string: "http://openweathermap.org/img/wn/\(icon)@2x.png")
@@ -75,9 +75,9 @@ extension WeatherPresenter: WeatherViewOutput {
     func showCitiesScreen() {
         output?.weatherModuleCitiesModuleShow(self)
     }
-
+    
     func viewDidLoad() {
-fetchWeather(cityId: "1496153")
+        fetchWeather(cityId: "1496153")
     }
 }
 
